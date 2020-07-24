@@ -1,0 +1,410 @@
+<html>
+<head>
+  <title>Hangman Game</title>
+<style>
+body{
+  background-color: #c1d72e;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+ color: #fff;
+}
+h1{
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
+  text-transform: uppercase;
+  margin: 5px 0;
+  color:#006699;
+}
+button {
+  border-radius: 5px;
+  background: #fff;
+  color: #006699;
+  border: solid 1px #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 2em;
+  width: 50px;
+  margin: 10px;
+  outline: none;
+  transform: translate(20px, -60px);
+}
+button:hover {
+  transition: all 0.003s ease-in-out;
+  background: #006699;
+  border: solid 1px #fff;
+  color: #fff;
+}
+button:disabled{
+  color:white;
+  background: white;
+}
+.restart{
+  width: 120px;
+  transform: translate(80px, 130px);
+
+}
+.pole_hb{
+    background: black;
+    width: 300px;
+    height: 5px;
+    float: left;
+    transform:translate(600px, 400px);
+}
+.pole_ht {
+    background: black;
+    width: 300px;
+    height: 5px;
+    transform: translate(263px,0px)
+}
+
+.pole_vl {
+    width: 5px;
+    height: 400px;
+    background: black;
+    transform:translate(115px, 0px)
+}
+.pole_vs{
+    width: 5px;
+    height: 75px;
+    background: black;
+    transform:translate(410px, -400px)
+}
+.head {
+   position: absolute;
+   border-radius: 50px;
+   width: 75px;
+   height: 75px;
+   background-color: black;
+   bottom: 150px;
+   left: 10px;
+   transform: translate(995px,-200px)
+}
+.body {
+  border-left: 6px solid green;
+  position: absolute;
+  left: 50%;
+  margin-left: -3px;
+  top: 0;
+  border-left: 6px solid black;
+  float: right;
+  width: 1px;
+  height: 100px;
+  background: black;
+  transform:translate(410px, 120px)
+}
+.leg_r{
+  position: absolute;
+  width: 5px;
+  height:75px;
+  background: black;
+  transform:translate(1067px, -274px)
+            rotate(135deg);
+}
+.leg_l{
+  position: absolute;
+  width: 5px;
+  height:75px;
+  background: black;
+  transform:translate(1013px, -276px)
+            rotate(45deg);
+}
+.arm_r{
+  position: absolute;
+  width: 5px;
+  height: 60px;
+  background: black;
+  float: right;
+  transform:translate(1060px, -350px)
+            rotate(45deg);
+}
+.arm_l{
+  position: absolute;
+  width: 5px;
+  height: 60px;
+  background: black;
+  transform:translate(1020px,  -350px)
+            rotate(135deg);
+}
+.eye_r{
+  position: absolute;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  transform:translate(1045px, -390px);
+}
+.eye_l{
+  position: absolute;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  transform:translate(1030px, -390px);
+}
+.guess{
+  width:200px;
+  height:50px;
+  transform:translate(290px, 50px);
+  font-size: 2em;
+  text-align:center;
+  color: #006699;
+}
+.hint{
+  transform:translate(290px, 50px);
+  width:75px
+}
+.fails{
+  border: none;
+  transform:translate(-30px, 50px);
+  text-align: center;
+  width:200px
+}
+.modal {
+  display: ;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto; /* 10% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%; /* Could be more or less, depending on screen size */
+  color: black;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rightframe { /* the width and height here are your resultant sizes. */
+    width: 400px;
+    height: 300px;
+    float:right;
+    margin:20px;
+    position: relative;
+}
+
+.rightframe iframe {  /* the width and height here are your "unshrunken" sizes.  Important bc of the scale variable later. */
+    position: relative;
+    z-index: 1;
+    width: 1000px;
+    height: 750px;
+
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    transform-origin: 0 0;
+
+
+    -webkit-transform:  scale(0.4, 0.4);   /* Gets the size down to fit into your .thumbnail. */
+    -moz-transform:  scale(0.4, 0.4);      /* Gets the size down to fit into your .thumbnail. */
+    transform:  scale(0.4, 0.4);           /* Gets the size down to fit into your .thumbnail. */
+    overflow: hidden;
+
+}
+#picBox {
+  width:400px;
+  height:400px;
+  float:right;
+  margin-right: 80px;
+  transform: translate(-100px, 50px);
+}
+.main{
+  width:400px;
+  height:400px;
+  transform:translate(0px, 0px);
+}
+
+</style>
+</head>
+<body>
+  <center>
+    <br><br><br>
+<h1><b>Destinations In Europe</b></h1>
+<br><br><br>
+<div id= "picBox" class="picBox" style="position:relative; top=10px; left:100px; ">
+  <img src="mainpage.png" class="main">
+</div>
+<!-- <div id="hangm_animation" class="hangman" style="position:relative; top=10px; left:100px">
+    <div id="pole_1" class="h pole_hb" ></div>
+    <div id="pole_2" class="h pole_ht"></div>
+    <div id="pole_3" class="h pole_vl"></div>
+    <div id="pole_4" class="h pole_vs"></div>
+
+    <div id="hangm_1" class="h head" style="display:none"></div>
+    <div id="hangm_2" class="h body" style="display:none"></div>
+    <div id="hangm_3" class="h arm_r" style="display:none"></div>
+    <div id="hangm_4" class="h arm_l" style="display:none"></div>
+    <div id="hangm_5" class="h leg_r" style="display:none"></div>
+    <div id="hangm_6" class="h leg_l" style="display:none"></div>
+    <div id="hangm_7" class="h eye_r" style="display:none"></div>
+    <div id="hangm_8" class="h eye_l" style="display:none"></div>
+</div-->
+
+<input id="guess" class="guess" disabled>
+<!--hints are known nicknames for the cities-->
+<button id="hint" class="hint">Hint</button>
+<button id="restart" class="restart" onclick="resetGame();">Restart</button>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+	<div id="modal_info"><p>Hello! Welcome to Hangman</p></div>
+</div>
+
+</div>
+
+ <div id="failedCnt" class="fails">You have 8 chances</div>
+</center>
+<script>
+
+function myFunction() {
+for(x=1;x<=26;x++){
+  //use the createElement function to create known HTML elements
+    var btn = document.createElement("BUTTON");
+  var myP = document.createElement("br");
+
+  //why start at 64? Because the letter 'A' is code 65
+    var letter = String.fromCharCode(x+64);
+    var t = document.createTextNode(letter);
+  //add the text stored in 't' to the our button variable
+    btn.appendChild(t);
+  //give the btn an id to make it easy to access later
+    btn.id =letter;
+  //this is how to add an event to the button -- name the event and
+  //then include the function you want it to perform
+    btn.addEventListener("click", checkLetter);
+    //add the btn to the page
+  document.body.appendChild(btn);
+  //add a line break 'myP' after 3 buttons
+  if (x%4==0) {
+  document.body.appendChild(myP);
+  }
+    }
+}
+
+//the secret words
+var words = ["VENICE", "PARIS", "ROME", "ATHENS", "AMSTERDAM", "LONDON", "MADRID", "BERLIN", "MILAN", "BARCELONA"]
+var hints = ["Queen of the Adriatic", "City of Love", "Eternal City", "The City of the Violet Crown", "Venice of the North", "city where the Big Ben is located", "city of the Bear and the Strawberry Tree", "Paper City", "The Fashion Capital of the World", "Ciutat Comtal in Catalan"];
+
+var dashes = "";
+//getting the secret word
+var word = words[Math.floor(Math.random() * words.length)];
+//alert(word);
+
+function createDashes(w) {
+    for (let c = 1; c <= w.length; c++) {
+        dashes += "-";
+    }
+    document.getElementById("guess").value = dashes;
+}
+
+function checkLetter(){
+  //this refers to the object that called this function
+
+  this.disabled = true;
+
+  findLetter(word, this.id);
+
+}
+
+var failedCnt = 0;
+function findLetter(w, l){
+    var newWord = "";
+    if (w.indexOf(l)>-1) {
+      for (c=0;c<w.length;c++){
+          if (w.charAt(c) == l){
+              newWord += w.charAt(c);
+          }
+
+          else{
+              newWord += dashes.charAt(c)
+            }
+      }
+      dashes = newWord;
+    }
+    else {
+      failedCnt++;
+      //document.getElementById("hangm_" + failedCnt).style.display = "";
+	    document.getElementById("picBox").innerHTML = "<img src='fail"+failedCnt+".png' class='main'/>";
+      chancesLeft = 8-failedCnt;
+      document.getElementById("failedCnt").innerHTML = "You have " + chancesLeft + " chance(s) left";
+    }
+
+    document.getElementById("guess").value = dashes;
+//if the user doesnt guess the right word
+	if (failedCnt >= 8) {
+		 if (!confirm("GAME OVER!  Do you want to play again?")) {
+			window.close();
+		 } else {
+			window.location.reload();
+		 };
+	}
+
+	//if the user guesses the right word
+	if (dashes == w) {
+		 if (!confirm( "CONGRATS!  Do you want to play again?")) {
+			window.close();
+		 } else {
+			window.location.reload();
+		 };
+	}
+}
+	//hint/clue
+	var modal = document.getElementById("myModal");
+	var hint = document.getElementById("hint");
+	var span = document.getElementsByClassName("close")[0];
+
+	hint.onclick = function() {
+	  modal.style.display = "block";
+	  hintIndex = words.indexOf(word);
+	  document.getElementById("modal_info").innerHTML = hints[hintIndex];
+	}
+	span.onclick = function() {
+	  modal.style.display = "none";
+	}
+
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+		modal.style.display = "none";
+	  }
+	}
+function resetGame(){
+  failedCnt = 0;
+  document.getElementById("picBox").innerHTML = "<img src='mainpage.png' class='main'/>";
+  chancesLeft = 8-failedCnt;
+  document.getElementById("failedCnt").innerHTML = "You have " + chancesLeft + " chance(s) left";
+
+  for (x=1;x<=26;x++){
+    var letter = String.fromCharCode(x+64);
+
+    document.getElementById(letter).disabled = false;
+
+  }
+
+  //choosing another word
+  dashes = "";
+   word = words[Math.floor(Math.random() * words.length)];
+   createDashes(word);
+
+}
+	createDashes(word);
+
+	myFunction();
+</script>
+</body>
+</html>
